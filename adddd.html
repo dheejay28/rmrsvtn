@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Room</title>
+    <link rel="stylesheet" href="rsv.css">
+</head>
+<body>
+    <div class="container">
+        <img src="logo.png" alt="Logo" class="logo">
+        <h1>Add Room</h1>
+        
+        <label for="room-name">Room Name:</label>
+        <input type="text" id="room-name" required>
+        
+        <button onclick="addRoom()">Add Room</button>
+        <button onclick="window.location.href='admin.html'">Back to Admin</button>
+
+        <h2>Added Rooms</h2>
+        <table id="room-table">
+            <thead>
+                <tr>
+                    <th>Room Name</th>
+                </tr>
+            </thead>
+            <tbody id="room-list"></tbody>
+        </table>
+    </div>
+
+    <script>
+        function loadRooms() {
+            const rooms = JSON.parse(localStorage.getItem('rooms')) || [];
+            const roomList = document.getElementById('room-list');
+            roomList.innerHTML = '';
+
+            rooms.forEach(room => {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.textContent = room; 
+                row.appendChild(cell); 
+                roomList.appendChild(row); 
+            });
+        }
+
+        
+        function addRoom() {
+            const roomName = document.getElementById('room-name').value.trim();
+            if (!roomName) {
+                alert("Please enter a room name.");
+                return;
+            }
+
+            const rooms = JSON.parse(localStorage.getItem('rooms')) || [];
+            rooms.push(roomName); 
+            localStorage.setItem('rooms', JSON.stringify(rooms)); 
+
+            alert('Room added successfully!');
+            loadRooms(); 
+            document.getElementById('room-name').value = ''; 
+        }
+
+        window.onload = function() {
+            loadRooms();
+        };
+    </script>
+</body>
+</html>

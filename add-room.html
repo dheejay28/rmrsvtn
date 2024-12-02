@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Room</title>
+    <link rel="stylesheet" href="add-room.css">
+</head>
+<body>
+    <div class="container">
+        <img src="logo.png" alt="Logo" class="logo">
+        <h1>Add a Room</h1>
+
+        <label for="room-name">Room Name</label>
+        <input type="text" id="room-name" required>
+
+        <button onclick="addRoom()">Add Room</button>
+        <button onclick="window.location.href='admin.html'">Back to Home</button>
+
+        <h2>Added Rooms</h2>
+        <table id="rooms-table">
+            <thead>
+                <tr>
+                    <th>Room Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="rooms-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        function loadRooms() {
+            const rooms = JSON.parse(localStorage.getItem('rooms')) || [];
+            const roomsBody = document.getElementById('rooms-body');
+            roomsBody.innerHTML = '';
+
+            rooms.forEach(room => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${room}</td>
+                    <td><button onclick="removeRoom('${room}')">Remove</button></td>
+                `;
+                roomsBody.appendChild(row);
+            });
+        }
+
+        function addRoom() {
+            const roomName = document.getElementById('room-name').value.trim();
+            if (!roomName) {
+                alert("Please enter a room name.");
+                return;
+            }
+
+            const rooms = JSON.parse(localStorage.getItem('rooms')) || [];
+            rooms.push(roomName);
+            localStorage.setItem('rooms', JSON.stringify(rooms));
+            alert('Room added successfully!');
+            document.getElementById('room-name').value = '';
+            loadRooms();
+        }
+
+        function removeRoom(roomName) {
+            const rooms = JSON.parse(localStorage.getItem('rooms')) || [];
+            const updatedRooms = rooms.filter(room => room !== roomName);
+            localStorage.setItem('rooms', JSON.stringify(updatedRooms));
+            loadRooms(); 
+        }
+
+        window.onload = loadRooms; 
+    </script>
+</body>
+</html>
